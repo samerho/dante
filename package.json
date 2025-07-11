@@ -1,0 +1,39 @@
+{
+  "name": "dante-vault-api",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Production-grade Web3 backend API for Dante Labs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo 'Backend ready - no build step required for Node.js API'"
+  },
+  "keywords": [
+    "web3",
+    "ethereum",
+    "blockchain",
+    "api",
+    "jwt"
+  ],
+  "author": "Mohamd Samer",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.8.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "validator": "^13.15.15"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dante Vault API - Web3 Backend Infrastructure</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            margin-bottom: 2rem;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .status-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-online {
+            background: #00ff88;
+        }
+
+        .status-offline {
+            background: #ff4757;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .api-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .api-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .api-method {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .method-post {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .method-get {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .api-endpoint {
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .api-description {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 3rem;
+        }
+
+        .footer-text {
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tech-badge {
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid #667eea;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo">🏛️ Dante Vault API v2.0</div>
+            <div class="subtitle">Production-Grade Web3 Backend Infrastructure</div>
+            
+            <div class="tech-stack">
+                <span class="tech-badge">Node.js</span>
+                <span class="tech-badge">Express.js</span>
+                <span class="tech-badge">MongoDB</span>
+                <span class="tech-badge">Ethers.js</span>
+                <span class="tech-badge">JWT Auth</span>
+                <span class="tech-badge">Swagger UI</span>
+                <span class="tech-badge">Ethereum Mainnet</span>
+            </div>
+        </div>
+
+        <div class="status-card">
+            <div class="status-indicator">
+                <div class="status-dot" id="status-dot"></div>
+                <span id="api-status">Checking API Status...</span>
+                <div class="loading" id="loading" style="margin-left: 10px;"></div>
+            </div>
+            <div id="network-info" style="text-align: center; color: #a0a0a0; font-size: 0.9rem;"></div>
+        </div>
+
+        <div class="api-grid">
+            <div class="api-card">
+                <div class="api-method method-post">POST</div>
+                <div class="api-endpoint">/auth/login</div>
+                <div class="api-description">
+                    Authenticate with Ethereum wallet address and receive JWT token
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div class="api-method method-get">GET</div>
+                <div class="api-endpoint">/wallet/:address/balance</div>
+                <div class="api-description">
+                    Fetch real-time ETH balance from Ethereum mainnet
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div class="api-method method-get">GET</div>
+                <div class="api-endpoint">/wallet/:address/txs</div>
+                <div class="api-description">
+                    Get recent transaction history using Etherscan API
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div class="api-method method-get">GET</div>
+                <div class="api-endpoint">/wallet/:address/overview</div>
+                <div class="api-description">
+                    Complete wallet overview with balance and transactions
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div class="api-method method-get">GET</div>
+                <div class="api-endpoint">/auth/verify</div>
+                <div class="api-description">
+                    Verify JWT token validity and get user information
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div class="api-method method-get">GET</div>
+                <div class="api-endpoint">/user/profile</div>
+                <div class="api-description">
+                    Get and manage user profile with persistent sessions
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div class="api-method method-post">POST</div>
+                <div class="api-endpoint">/transfer/simulate</div>
+                <div class="api-description">
+                    Simulate Ethereum transfers with gas estimation and validation
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div class="api-method method-get">GET</div>
+                <div class="api-endpoint">/docs</div>
+                <div class="api-description">
+                    Interactive Swagger UI documentation with live API testing
+                </div>
+            </div>
+
+            <div class="api-card">
+                <div class="api-method method-get">GET</div>
+                <div class="api-endpoint">/health</div>
+                <div class="api-description">
+                    Health check with MongoDB and Ethereum status monitoring
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-text">Dev by Mohamd Samer</div>
+        </div>
+    </div>
+
+    <script>
+        // Particle animation
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const particleCount = 100;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(102, 126, 234, ${this.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            // Draw connections
+            particles.forEach((particle, i) => {
+                particles.slice(i + 1).forEach(otherParticle => {
+                    const dx = particle.x - otherParticle.x;
+                    const dy = particle.y - otherParticle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particle.x, particle.y);
+                        ctx.lineTo(otherParticle.x, otherParticle.y);
+                        ctx.strokeStyle = `rgba(102, 126, 234, ${0.1 * (1 - distance / 100)})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                });
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // API Status Check
+        async function checkApiStatus() {
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('api-status');
+            const loading = document.getElementById('loading');
+            const networkInfo = document.getElementById('network-info');
+
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    statusDot.className = 'status-dot status-online';
+                    statusText.textContent = 'API Online - All Systems Operational';
+                    networkInfo.innerHTML = `
+                        Connected to Ethereum Mainnet<br>
+                        Latest Block: ${data.data.ethereum.blockNumber || 'N/A'}<br>
+                        Network: ${data.data.ethereum.network || 'mainnet'}
+                    `;
+                } else {
+                    throw new Error('API not responding correctly');
+                }
+            } catch (error) {
+                statusDot.className = 'status-dot status-offline';
+                statusText.textContent = 'API Offline - Please check server status';
+                networkInfo.textContent = 'Unable to connect to Ethereum network';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Check API status on page load
+        checkApiStatus();
+
+        // Refresh status every 30 seconds
+        setInterval(checkApiStatus, 30000);
+    </script>
+</body>
+</html>
